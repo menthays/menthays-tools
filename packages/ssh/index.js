@@ -1,8 +1,8 @@
-const { spawn } = require('child_process')
+const { exec } = require('child_process')
 const fs = require('fs')
 
 const sshKeyGen = opts => {
-  let gen = spawn('ssh-keygen', [
+  let gen = exec('ssh-keygen', [
 		'-t','rsa',
 		'-C', opts.comment,
 		'-N', opts.password,
@@ -14,7 +14,7 @@ const sshKeyGen = opts => {
   });
 
   gen.stdout.on('data', (data) => {
-    console.log(`stderr: ${data}`);
+    console.log(`stdout: ${data}`);
   });
   
   gen.on('close', (code) => {

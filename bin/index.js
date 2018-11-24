@@ -3,7 +3,13 @@ const chalk = require('chalk')
 const program = require('commander');
 
 const readFileMd5 = require('../packages/readFileMd5')
-const {sshKeyGen, sshKeyGet} = require('../packages/sshKey')
+const {sshKeyGen, sshKeyGet} = require('../packages/ssh')
+const {start} = require('../packages/redis')
+
+program
+  .version("0.0.1")
+  .description("Encapsulation of common commands menthays used")
+
 
 // md5
 program
@@ -17,7 +23,7 @@ program
 
 // ssh key
 program
-  .command('ssh-keygen')
+  .command('ssh-key gen')
   .description('Generate ssh key')
   .option('-C, --comment [comment]', 'usually your email')
   .option('-N, --password [password]', 'password', '')
@@ -31,12 +37,20 @@ program
   })
 
 program
-  .command('ssh-keyget')
+  .command('ssh-key get')
   .description('Get ssh key')
   .action(function(cmd) {
     sshKeyGet()
       .then(res => {console.log(chalk.yellowBright('\n'+res))})
       .catch(console.error)
+  })
+
+// start redis
+program
+  .command('redis serve')
+  .description('start redis server')
+  .action(function() {
+    start()
   })
 
 program.parse(process.argv)
