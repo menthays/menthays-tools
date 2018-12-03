@@ -14,6 +14,12 @@ registerEncodeModule(program);
 registerSSHModule(program);
 registerServiceModule(program);
 
+program
+  .command('*')
+  .action(() => {
+    program.help();
+  });
+
 program.parse(process.argv);
 
 if(!program.args.length) {

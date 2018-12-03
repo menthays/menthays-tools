@@ -1,5 +1,5 @@
 const {
-  exec
+  spawn
 } = require('child_process')
 const fs = require('fs')
 const signale = require('signale')
@@ -8,9 +8,6 @@ const registerSSHModule = program => {
   program
     .command('ssh-keygen')
     .description('Generate ssh key')
-    .option('-C, --comment [comment]', 'usually your email')
-    .option('-N, --password [password]', 'password')
-    .option('-f, --location [location]', 'location')
     .action(sshKeyGen)
 
   program
@@ -24,18 +21,10 @@ const registerSSHModule = program => {
     .action(sshAlias)
 }
 
-const sshKeyGen = ({
-  comment,
-  password='',
-  location=`${process.env.HOME}/.ssh/id_rsa`
-}) => {
-  console.log(comment, password, location)
-  let gen = exec('ssh-keygen', [
-    '-t', 'rsa',
-    '-C', '',
-    '-N', '',
-    '-f', 'rsa'
-  ])
+const sshKeyGen = () => {
+  let gen = spawn('ssh-keygen')
+
+  process.stdin.pipe(gen.stdin);
 
   gen.stderr.on('data', (data) => {
     signale.error(`stderr: ${data}`);
@@ -47,6 +36,7 @@ const sshKeyGen = ({
 
   gen.on('close', (code) => {
     signale.log(`child process exited with code ${code}`);
+    process.exit(code);
   });
 }
 
