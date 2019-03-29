@@ -58,13 +58,15 @@ const sshKeyGet = () => {
 
 const sshAlias = () => {
   const filepath = `${process.env.HOME}/.ssh/config`
-  const sample = `Host your_alias_name
+  const sample = `
+    Host your_alias_name
     User username
     Hostname remote.sshserver.com
-    Port 50001`;
+    Port 50001
+  `;
 
   fs.writeFile(filepath, sample, {
-    flag: 'w'
+    flag: 'a+'
   }, err => {
     err && signale.error(err)
     fs.readFile(filepath, 'utf-8', (err, data) => {
